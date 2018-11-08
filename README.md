@@ -174,4 +174,31 @@ Listening on port 8080
 Go to localhost:8080  
 
 specify working directory in Dockerfile.
-`WORKDIR /usr/app` move all the files under simpleweb in host to /usr/app in container.
+`WORKDIR /usr/app` move all the files under simpleweb in host to /usr/app in container.  
+
+Docker compose 
+project `visit`   
+Used to start up multiple Docker containers at the same time. and connect them together.   
+![](/img/docker_compose_file.png)  
+create the docker compose yml file. will automatically create networking between the two containers.   
+
+```bash
+[qiwan@qiwan visits]$ sudo docker-compose up
+# will set up network first
+Creating network "visits_default" with the default driver
+
+# two services have been created
+Creating visits_redis-server_1 ... done
+Creating visits_node-app_1     ... done
+
+# output of redis server and node server
+redis-server_1  | 1:M 08 Nov 2018 21:55:45.237 * DB loaded from disk: 0.000 seconds
+redis-server_1  | 1:M 08 Nov 2018 21:55:45.237 * Ready to accept connections
+node-app_1      |
+node-app_1      | > @ start /app
+node-app_1      | > node index.js
+node-app_1      |
+node-app_1      | Listening on port 8081
+```  
+
+Then go to localhost:4001
