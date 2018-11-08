@@ -171,4 +171,7 @@ container port mapping
 Listening on port 8080
 ```
 
-Go to localhost:8080
+Go to localhost:8080  
+
+specify working directory in Dockerfile.
+`WORKDIR /usr/app` move all the files under simpleweb in host to /usr/app in container.
