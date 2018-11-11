@@ -201,4 +201,76 @@ node-app_1      |
 node-app_1      | Listening on port 8081
 ```  
 
-Then go to localhost:4001
+Then go to localhost:4001  
+
+![](/img/visit_app.png)
+
+stop docker compose containers `$ sudo docker-compose down`
+
+```shell
+[qiwan@qiwan visits]$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND               CREATED             STATUS     PORTS                    NAMES
+6fe2f41cf5e3        redis               "docker-entrypoint..."   11 minutes ago      Up 9 seconds     6379/tcp                 visits_redis-server_1
+2bd77084cfc8        visits_node-app     "npm start"              11 minutes ago      Up 9 seconds     0.0.0.0:4001->8081/tcp   visits_node-app_1
+[qiwan@qiwan visits]$ sudo docker-compose down
+Stopping visits_redis-server_1 ... done
+Stopping visits_node-app_1     ... done
+Removing visits_redis-server_1 ... done
+Removing visits_node-app_1     ... done
+Removing network visits_default
+```  
+
+restart policy (use always most)  
+- "no"
+- always
+- failure
+- on-failure
+- unless-stopped  
+After adding the policy, run `$ sudo docker-compose up --build`
+
+`$ sudo docker-compose ps` will look for yml file first, so must be run under that dir
+```shell
+[qiwan@qiwan visits]$ sudo docker-compose ps
+  Name       Command    State    Ports
+----------------------------------------
+visits_no   npm start   Up      0.0.0.0:
+de-app_1                        4001->80
+                                81/tcp
+visits_re   docker-en   Up      6379/tcp
+dis-        trypoint.
+server_1    sh redis
+```  
+
+### Creating a Production-Grade Workflow
+
+```
+$ sudo npm install -g create-react-app 
+$ create-react-appfrontend
+```  
+
+![](/img/npm_flow.png)
+
+command to intereact with project  
+
+`Dockerfile.dev` for build locally, `Dockerfile` for production  
+
+Customize the name of dockerfile
+```
+$ sudo docker build -f Dockerfile.dev .
+Removing intermediate container 213e107275b0
+Successfully built 9c0fbec3c770
+```  
+
+Build dependencies
+
+`Sending build context to Docker daemon 236.2 MB` --- no need the  node_modules folder in local  
+
+```
+$ sudo docker run -p 3000:3000 9c0
+```  
+
+Propagate changes in source to the containers (do not rebuild images every time)  
+
+use volume -- ise reference instead of copy
+
+
