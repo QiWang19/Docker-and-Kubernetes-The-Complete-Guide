@@ -281,6 +281,8 @@ use volume -- use reference instead of copy
 Error: EACCES: permission denied, scandir '/app' in fedora 
    
 <https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/v4/questions/5293976>  
+<https://stackoverflow.com/questions/44139279/docker-mounting-volume-with-permission-denied/44142648#44142648>    
+Error because SELinux
 
 Use docker compose to simplify the command  
 - create docker compose file
@@ -301,8 +303,11 @@ $ sudo docker run 14c npm run test
 # or 
 # get the access to the container input
 $ sudo docker run -it 14c npm run test  
-```
+```  
 
+Living update tests  
+- start container by dokcecompose and then change the test
+- add tests service in docker-compose.yml, and run `$ sudo docker-compose up --build`
 
 
 
