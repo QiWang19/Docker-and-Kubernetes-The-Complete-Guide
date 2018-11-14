@@ -269,8 +269,41 @@ Build dependencies
 $ sudo docker run -p 3000:3000 9c0
 ```  
 
-Propagate changes in source to the containers (do not rebuild images every time)  
+Propagate changes in source(source code) to the containers (do not rebuild images every time)  
+use volume -- use reference instead of copy  
+![](/img/volume_syntax.png)  
 
-use volume -- ise reference instead of copy
+`-v /app/node_modules` is a place holder
+```
+[qiwan@qiwan frontend]$ sudo docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app e43dd
+```
+
+Error: EACCES: permission denied, scandir '/app' in fedora 
+   
+<https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/v4/questions/5293976>  
+
+Use docker compose to simplify the command  
+- create docker compose file
+- use Dockerfile.dev file to build images  
+  `context`: where the files for the images pulled from  
+  `dockerfile: Dockerfile.dev`  
+- run   `$ sudo docker-compose up`
+- do not need the `COPY . .` in the Dockerfile  
+
+### Executing Tests  
+```
+$ sudo docker build -f Dockerfile.dev .
+```
+
+```
+$ sudo docker run 14c npm run test  
+
+# or 
+# get the access to the container input
+$ sudo docker run -it 14c npm run test  
+```
+
+
+
 
 
