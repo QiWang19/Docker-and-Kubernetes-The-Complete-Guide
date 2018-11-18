@@ -307,7 +307,72 @@ $ sudo docker run -it 14c npm run test
 
 Living update tests  
 - start container by dokcecompose and then change the test
-- add tests service in docker-compose.yml, and run `$ sudo docker-compose up --build`
+- add tests service in docker-compose.yml, and run `$ sudo docker-compose up --build`, change test, it will automatically update.  
+
+Our terminal -> stdin of each process, but the stdout?  
+After `$ sudo docker-compose up --build`, find the id of running container with command `npm run start`  
+
+```
+# get access to stdin of the primary process, 
+# not the one that runs the test suite
+$ sudo docker attach 3dc 
+```  
+in a new terminal  
+
+```
+$ sudo docker exec -it 3dc sh
+/app # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 npm
+   24 root      0:00 node /app/node_modules/.bin/react-scripts start
+   31 root      0:07 node /app/node_modules/react-scripts/scripts/start.js
+   71 root      0:00 sh
+   78 root      0:00 ps  
+/app #   
+```  
+
+### npm build make production version Need for Nginx  
+Production Server - nginx  
+multi-step build process
+![](/img/nginx.png)  
+Create Dockerfile /app/build  
+ - build phase  
+
+ ```docker
+ FROM node:alpine as builder  
+ ```
+ - run phase  
+
+ ```docker
+ FROM nginx
+ ```  
+
+ ```
+ $ sudo docker build .  
+
+ Step 6/8 : RUN npm run build
+ ---> Running in fcddb04f4cc9  
+
+ Step 7/8 : FROM nginx
+ ---> dbfc48660aeb  
+
+ Successfully built cf7d2dd86c07
+
+ $ sudo docker run -p 8080:80 cf7
+ ```  
+
+ go to <http://localhost:8080/>  
+
+ ### Deploy the production  Github, Travis CI and AWS  
+ set up github  
+ set Travis CI - Travis CI yml file configuration  `.travis.yml`
+ ![](/img/travis_flow.png)  
+ ![](/img/travis_docker.png)
+
+
+
+
+
 
 
 
