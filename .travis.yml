@@ -3,7 +3,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t qiwan/docker-react -f Dockerfile.dev .
+  - docker build -t qiwan/docker-react -f ./frontend/Dockerfile.dev ./frontend
 
 
 script:
