@@ -364,10 +364,39 @@ Create Dockerfile /app/build
  go to <http://localhost:8080/>  
 
  ### Deploy the production  Github, Travis CI and AWS  
+
+ ![](/img/deploy.png)
  set up github  
  set Travis CI - Travis CI yml file configuration  `.travis.yml`
  ![](/img/travis_flow.png)  
  ![](/img/travis_docker.png)
+
+AWS elastic beanstalk  
+ - create new application, web server environment  
+ - choose `docker` platform  
+ - use sample application  
+
+ ![](/img/aws_loadbalancer.png)  
+
+ Travis configurationt to deploy to AWS   
+
+.travis.yml  
+
+```yml
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2" # inside URL
+  app: "docker-react" # app name
+  env: "DockerReact-env"
+  bucket_name: # aws use this s3 bucket to put the app zip file  
+  bucket_path: "docker-react"
+  on:
+    branch: master
+```  
+
+set iam keys  
+go to travis-settings, set keys to environment variables.
+
 
 
 
