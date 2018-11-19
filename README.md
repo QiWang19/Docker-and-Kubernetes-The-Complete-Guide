@@ -395,7 +395,8 @@ deploy:
 ```  
 
 set iam keys  
-go to travis-settings, set keys to environment variables.
+go to travis-settings, set keys to environment variables.  
+Add `EXPOSE 80` in Dockerfile
 
 
 
