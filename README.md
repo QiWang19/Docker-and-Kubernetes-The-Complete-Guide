@@ -377,7 +377,7 @@ AWS elastic beanstalk
  - use sample application  
 
  ![](/img/aws_loadbalancer.png)  
-
+  beanstalk scale things  
  Travis configurationt to deploy to AWS   
 
 .travis.yml  
@@ -396,7 +396,20 @@ deploy:
 
 set iam keys  
 go to travis-settings, set keys to environment variables.  
-Add `EXPOSE 80` in Dockerfile
+Add `EXPOSE 80` in Dockerfile  
+
+### Build a Multi-Container Application
+
+![](/img/single_container.png)  
+
+problems:  
+1. only ngnix server  
+2. img build both travis CI & push to AWS beanstalk   
+
+![](/img/app_flow.png)  
+
+
+
 
 
 
