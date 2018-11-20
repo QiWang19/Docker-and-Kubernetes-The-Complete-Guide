@@ -408,6 +408,19 @@ problems:
 
 ![](/img/app_flow.png)  
 
+- make dev Dockerfile for each, `React App`, `Express Server`, `Worker`  
+
+### Kybernetes  
+![](/img/k8s_flow.png)  
+
+![](/img/minikube_local.png)  
+
+In local machine uses kubectl to communicate with master
+
+#### Get the multi-client image running on our local Kubernates Cluster running as a container  
+
+- make sure the image is on Dockerhub
+
 
 
 
