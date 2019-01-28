@@ -411,6 +411,11 @@ problems:
 - make dev Dockerfile for each, `React App`, `Express Server`, `Worker`  
 - Add Postgres as server  
 
+Nginx path routhing -- create a new nginx image(container) 
+Add `default.conf` file. Rout requests from pages to the different servers.
+
+Add `Dockerfile.dev` for building new image
+
 ### Kubernetes  
 ![](/img/k8s_flow.png)  
 
