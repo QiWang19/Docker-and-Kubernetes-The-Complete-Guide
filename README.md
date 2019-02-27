@@ -1,4 +1,4 @@
-# Docker-and-Kubernetes-The-Complete-Guide  
+# Docker-and-Kubernetes-The-Complete-Guide
 
 /home/qiwan/redis-image/Dockerfile
 
@@ -8,7 +8,7 @@ FROM alpine
 # Download and install a dependency
 RUN apk add --update redis
 RUN apk add --update gcc
-# Tell the image what to do when it starts 
+# Tell the image what to do when it starts
 # as a container
 CMD ["redis-server"]
 ```
@@ -48,7 +48,7 @@ Successfully built 3049f1170018
 1:M 07 Nov 06:05:02.040 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
 1:M 07 Nov 06:05:02.040 * Ready to accept connections
 
-```  
+```
 
 tag image
 
@@ -125,7 +125,7 @@ Step 3/3 : CMD npm start
  ---> ef56fadad43b
 Removing intermediate container a65c2c6c7d08
 Successfully built ef56fadad43b
-```  
+```
 
 Deal with error `no package.json`
 `package.json` should be avaliable before `npm install`
@@ -156,11 +156,11 @@ Step 4/4 : CMD npm start
  ---> Using cache
  ---> b70d40aab01c
 Successfully built b70d40aab01c
-```  
+```
 
 start this new image and got the node server running
 
-container port mapping 
+container port mapping
 
 ```
 [qiwan@qiwan simpleweb]$ sudo docker run -p 8080:8080 qiwan/simpleweb
@@ -171,16 +171,16 @@ container port mapping
 Listening on port 8080
 ```
 
-Go to localhost:8080  
+Go to localhost:8080
 
 specify working directory in Dockerfile.
-`WORKDIR /usr/app` move all the files under simpleweb in host to /usr/app in container.  
+`WORKDIR /usr/app` move all the files under simpleweb in host to /usr/app in container.
 
-Docker compose 
-project `visit`   
-Used to start up multiple Docker containers at the same time. and connect them together.   
-![](/img/docker_compose_file.png)  
-create the docker compose yml file. will automatically create networking between the two containers.   
+Docker compose
+project `visit`
+Used to start up multiple Docker containers at the same time. and connect them together.
+![](/img/docker_compose_file.png)
+create the docker compose yml file. will automatically create networking between the two containers.
 
 ```bash
 [qiwan@qiwan visits]$ sudo docker-compose up
@@ -199,9 +199,9 @@ node-app_1      | > @ start /app
 node-app_1      | > node index.js
 node-app_1      |
 node-app_1      | Listening on port 8081
-```  
+```
 
-Then go to localhost:4001  
+Then go to localhost:4001
 
 ![](/img/visit_app.png)
 
@@ -218,14 +218,14 @@ Stopping visits_node-app_1     ... done
 Removing visits_redis-server_1 ... done
 Removing visits_node-app_1     ... done
 Removing network visits_default
-```  
+```
 
-restart policy (use always most)  
+restart policy (use always most)
 - "no"
 - always
 - failure
 - on-failure
-- unless-stopped  
+- unless-stopped
 After adding the policy, run `$ sudo docker-compose up --build`
 
 `$ sudo docker-compose ps` will look for yml file first, so must be run under that dir
@@ -239,85 +239,85 @@ de-app_1                        4001->80
 visits_re   docker-en   Up      6379/tcp
 dis-        trypoint.
 server_1    sh redis
-```  
+```
 
 ### Creating a Production-Grade Workflow
 
 ```
-$ sudo npm install -g create-react-app 
+$ sudo npm install -g create-react-app
 $ create-react-appfrontend
-```  
+```
 
 ![](/img/npm_flow.png)
 
-command to intereact with project  
+command to intereact with project
 
-`Dockerfile.dev` for build locally, `Dockerfile` for production  
+`Dockerfile.dev` for build locally, `Dockerfile` for production
 
 Customize the name of dockerfile
 ```
 $ sudo docker build -f Dockerfile.dev .
 Removing intermediate container 213e107275b0
 Successfully built 9c0fbec3c770
-```  
+```
 
 Build dependencies
 
-`Sending build context to Docker daemon 236.2 MB` --- no need the  node_modules folder in local  
+`Sending build context to Docker daemon 236.2 MB` --- no need the  node_modules folder in local
 
 ```
 $ sudo docker run -p 3000:3000 9c0
-```  
+```
 
-Propagate changes in source(source code) to the containers (do not rebuild images every time)  
-use volume -- use reference instead of copy  
-![](/img/volume_syntax.png)  
+Propagate changes in source(source code) to the containers (do not rebuild images every time)
+use volume -- use reference instead of copy
+![](/img/volume_syntax.png)
 
 `-v /app/node_modules` is a place holder
 ```
 [qiwan@qiwan frontend]$ sudo docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app e43dd
 ```
 
-Error: EACCES: permission denied, scandir '/app' in fedora 
-   
-<https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/v4/questions/5293976>  
-<https://stackoverflow.com/questions/44139279/docker-mounting-volume-with-permission-denied/44142648#44142648>    
+Error: EACCES: permission denied, scandir '/app' in fedora
+
+<https://www.udemy.com/docker-and-kubernetes-the-complete-guide/learn/v4/questions/5293976>
+<https://stackoverflow.com/questions/44139279/docker-mounting-volume-with-permission-denied/44142648#44142648>
 Error because SELinux
 
-Use docker compose to simplify the command  
+Use docker compose to simplify the command
 - create docker compose file
-- use Dockerfile.dev file to build images  
-  `context`: where the files for the images pulled from  
-  `dockerfile: Dockerfile.dev`  
+- use Dockerfile.dev file to build images
+  `context`: where the files for the images pulled from
+  `dockerfile: Dockerfile.dev`
 - run   `$ sudo docker-compose up`
-- do not need the `COPY . .` in the Dockerfile  
+- do not need the `COPY . .` in the Dockerfile
 
-### Executing Tests  
+### Executing Tests
 ```
 $ sudo docker build -f Dockerfile.dev .
 ```
 
 ```
-$ sudo docker run 14c npm run test  
+$ sudo docker run 14c npm run test
 
-# or 
+# or
 # get the access to the container input
-$ sudo docker run -it 14c npm run test  
-```  
+$ sudo docker run -it 14c npm run test
+```
 
-Living update tests  
+Living update tests
 - start container by dokcecompose and then change the test
-- add tests service in docker-compose.yml, and run `$ sudo docker-compose up --build`, change test, it will automatically update.  
+- add tests service in docker-compose.yml, and run `$ sudo docker-compose up --build`, change test, it will automatically update.
 
-Our terminal -> stdin of each process, but the stdout?  
-After `$ sudo docker-compose up --build`, find the id of running container with command `npm run start`  
+Our terminal -> stdin of each process, but the stdout?
+After `$ sudo docker-compose up --build`, find the id of running container with command `npm run start`
 
 ```
-# get access to stdin of the primary process, 
+# get access to stdin of the primary process,
 # not the one that runs the test suite
-$ sudo docker attach 3dc 
-```  
-in a new terminal  
+$ sudo docker attach 3dc
+```
+in a new terminal
 
 ```
 $ sudo docker exec -it 3dc sh
@@ -327,60 +327,60 @@ PID   USER     TIME  COMMAND
    24 root      0:00 node /app/node_modules/.bin/react-scripts start
    31 root      0:07 node /app/node_modules/react-scripts/scripts/start.js
    71 root      0:00 sh
-   78 root      0:00 ps  
-/app #   
-```  
+   78 root      0:00 ps
+/app #
+```
 
-### npm build make production version Need for Nginx  
-Production Server - nginx  
+### npm build make production version Need for Nginx
+Production Server - nginx
 multi-step build process
-![](/img/nginx.png)  
-Create Dockerfile /app/build  
- - build phase  
+![](/img/nginx.png)
+Create Dockerfile /app/build
+ - build phase
 
  ```docker
- FROM node:alpine as builder  
+ FROM node:alpine as builder
  ```
- - run phase  
+ - run phase
 
  ```docker
  FROM nginx
- ```  
+ ```
 
  ```
- $ sudo docker build .  
+ $ sudo docker build .
 
  Step 6/8 : RUN npm run build
- ---> Running in fcddb04f4cc9  
+ ---> Running in fcddb04f4cc9
 
  Step 7/8 : FROM nginx
- ---> dbfc48660aeb  
+ ---> dbfc48660aeb
 
  Successfully built cf7d2dd86c07
 
  $ sudo docker run -p 8080:80 cf7
- ```  
+ ```
 
- go to <http://localhost:8080/>  
+ go to <http://localhost:8080/>
 
- ### Deploy the production  Github, Travis CI and AWS  
+ ### Deploy the production  Github, Travis CI and AWS
 
  ![](/img/deploy.png)
- set up github  
+ set up github
  set Travis CI - Travis CI yml file configuration  `.travis.yml`
- ![](/img/travis_flow.png)  
+ ![](/img/travis_flow.png)
  ![](/img/travis_docker.png)
 
-AWS elastic beanstalk  
- - create new application, web server environment  
- - choose `docker` platform  
- - use sample application  
+AWS elastic beanstalk
+ - create new application, web server environment
+ - choose `docker` platform
+ - use sample application
 
- ![](/img/aws_loadbalancer.png)  
-  beanstalk scale things  
- Travis configurationt to deploy to AWS   
+ ![](/img/aws_loadbalancer.png)
+  beanstalk scale things
+ Travis configurationt to deploy to AWS
 
-.travis.yml  
+.travis.yml
 
 ```yml
 deploy:
@@ -388,48 +388,72 @@ deploy:
   region: "us-east-2" # inside URL
   app: "docker-react" # app name
   env: "DockerReact-env"
-  bucket_name: # aws use this s3 bucket to put the app zip file  
+  bucket_name: # aws use this s3 bucket to put the app zip file
   bucket_path: "docker-react"
   on:
     branch: master
-```  
+```
 
-set iam keys  
-go to travis-settings, set keys to environment variables.  
-Add `EXPOSE 80` in Dockerfile  
+set iam keys
+go to travis-settings, set keys to environment variables.
+Add `EXPOSE 80` in Dockerfile
 
 ### Build a Multi-Container Application
 
-![](/img/single_container.png)  
+![](/img/single_container.png)
 
-problems:  
-1. only ngnix server  
-2. img build both travis CI & push to AWS beanstalk   
+problems:
+1. only ngnix server
+2. img build both travis CI & push to AWS beanstalk
 
-![](/img/app_flow.png)  
+![](/img/app_flow.png)
 
-- make dev Dockerfile for each, `React App`, `Express Server`, `Worker`  
-- Add Postgres as server  
+- make dev Dockerfile for each, `React App`, `Express Server`, `Worker`
+- Add Postgres as server
 
-Nginx path routhing -- create a new nginx image(container) 
+Nginx path routhing -- create a new nginx image(container)
 Add `default.conf` file. Rout requests from pages to the different servers.
 
 Add `Dockerfile.dev` for building new image
 
-### Kubernetes  
-![](/img/k8s_flow.png)  
+![](/img/multictrsetup_complexapp.png)
 
-![](/img/minikube_local.png)  
+set up .travis.yml file, run tests, production version, push images to docker hub
 
-docker compose vs kubernetes compose  
+config Amazon EB with multi spread Dockerfiles
+  container documentation, Dockerrun.aws.json
+![](/img/dockerfile_spread.png)
+
+setup environment on ElasticBeanstalk
+
+RDS Database creation- Database to use containers-Postgres, Redis provided by aws
+
+Create VPC security groups
+
+Set environment variables
+
+![](/img/dbms_aws.png)
+
+IAM keys for deployment, set it in travisCI
+
+Add script in .travis.yml
+
+### Kubernetes
+![](/img/k8s_flow.png)
+
+![](/img/minikube_local.png)
+
+docker compose vs kubernetes compose
 
 ![](/img/docker_dif_k8s_compose.png)
 
+![](/img/complexapp_travis_flow.png)
+
 In local machine uses kubectl to communicate with master
 
-#### Get the multi-client image running on our local Kubernates Cluster running as a container  
+#### Get the multi-client image running on our local Kubernates Cluster running as a container
 
-Different object type in kubernetes  
+Different object type in kubernetes
 
 - make sure the image is on Dockerhub
 
