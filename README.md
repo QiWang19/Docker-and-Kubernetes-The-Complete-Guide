@@ -455,6 +455,68 @@ In local machine uses kubectl to communicate with master
 
 Different object type in kubernetes
 
+```yaml
+<!-- Different api version has different object we can create -->
+apiVersion: v1
+<!-- the kind of object we want to create: Pod, Service, StatefulSet, ReplicaController. etc.-->
+kind: Pod
+metadata:
+  name: client-pod
+  labels:
+    component: web
+  spec:
+    containers:
+      - name: client
+        image: qiwanredhat/multi-client
+        ports:
+          - containerPort: 3000
+```
+![](/img/minikube_node.png)
+each node has a kube-proxy can get access to the node
+
+Nodeport Service: only for development phase
+Port: other Pod needs multi-client to get access to current pod
+targetPort: access the current container
+nodePort: type in brower
+
+![](/img/cmd_configfile.png)
+command to run the config file
+```
+simplel8s]$ kubectl apply -f client-pod.yaml
+pod/client-pod created
+```
+
+```
+simplel8s]$ kubectl apply -f client-node-port.yaml
+service/client-node-port created
+```
+
+check status of created pod
+```
+[qiwan@qiwan simplel8s]$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+client-pod   1/1     Running   0          5m10s
+```
+
+get services
+
+```
+[qiwan@qiwan simplel8s]$ kubectl get services
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+client-node-port   NodePort    10.102.185.195   <none>        3050:31515/TCP   3m23s
+kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP          14h
+```
+
+node is not accessed using `localhost`, need to ask minikube for its own ip address
+
+```
+[qiwan@qiwan simplel8s]$ minikube ip
+192.168.42.19
+```
+goto `192.168.42.19:31515` in browser
+
+Different object type in kubernetes
+
 - make sure the image is on Dockerhub
 
 
