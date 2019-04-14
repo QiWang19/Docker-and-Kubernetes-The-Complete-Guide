@@ -451,6 +451,12 @@ docker compose vs kubernetes compose
 
 In local machine uses kubectl to communicate with master
 
+#### start minikube
+
+```
+minikube start --vm-driver=kvm
+```
+
 #### Get the multi-client image running on our local Kubernates Cluster running as a container
 
 Different object type in kubernetes
@@ -476,7 +482,7 @@ each node has a kube-proxy can get access to the node
 
 Nodeport Service: only for development phase
 Port: other Pod needs multi-client to get access to current pod
-targetPort: access the current container
+targetPort: access the current container(node VS. pod)
 nodePort: type in brower
 
 ![](/img/cmd_configfile.png)
@@ -520,12 +526,72 @@ Different object type in kubernetes
 - make sure the image is on Dockerhub
 
 
+##### create deployment object
 
+```
+<!-- cleaning -->
+[qiwan@qiwan simplek8s]$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+client-pod   1/1     Running   26         18d
+[qiwan@qiwan simplek8s]$ kubectl delete -f client-pod.yaml
+pod "client-pod" deleted
+[qiwan@qiwan simplek8s]$ kubectl get pods
+No resources found.
 
+<!-- create -->
+[qiwan@qiwan simplek8s]$ kubectl apply -f client-deployment.yaml
+deployment.apps/client-deployment created
+[qiwan@qiwan simplek8s]$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+client-deployment-bd7b67d96-ksqtz   1/1     Running   0          6s
 
+[qiwan@qiwan simplek8s]$ kubectl get deployments
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+client-deployment   1/1     1            1           2m17s
+```
 
+- get ip, go to `http://192.168.42.19:31515/`
 
+```
+[qiwan@qiwan simplek8s]$ minikube ip
+There is a newer version of minikube available (v0.35.0).  Download it here:
+https://github.com/kubernetes/minikube/releases/tag/v0.35.0
 
+To disable this notification, run the following:
+minikube config set WantUpdateNotification false
+192.168.42.19
+```
+
+every pod has own ip internel 172.17.0.2
+
+```
+[qiwan@qiwan simplek8s]$ kubectl get pods -o wide
+NAME                                READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+client-deployment-bd7b67d96-ksqtz   1/1     Running   0          20m   172.17.0.2   minikube   <none>           <none>
+```
+
+#### Update deployment images
+
+- tag the image with a version number
+- run a 'kubectl' command forcing the deployment to use the new image version
+`kubectl set image deployment/client-deployment client=qiwanredhat/multi-client:v5`
+
+#### let docker cli display host/containers inside virtual machine
+
+eval $(minikube docker-env)
+
+#### Architechture of fabbnaci app
+
+![](/img/app_k8s_archi.png)
+
+IngressService
+ClusterIPService
+
+#### k8s Path to Production
+
+![](/img/app_k8s_product.png)
+
+1. set up config file
 
 
 
