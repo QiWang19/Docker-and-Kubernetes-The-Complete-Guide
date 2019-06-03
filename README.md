@@ -528,6 +528,8 @@ Different object type in kubernetes
 
 ##### create deployment object
 
+deployment works with service object
+
 ```
 <!-- cleaning -->
 [qiwan@qiwan simplek8s]$ kubectl get pods
@@ -591,9 +593,63 @@ ClusterIPService
 
 ![](/img/app_k8s_product.png)
 
-1. set up config file
+#### complex app recreate the deployiment with kubernetes
+1. delete files do not needed with k8s
 
+  ```
+  .travis.yml
+  docker-compose.yml
+  Dockerrun.aws.json
+  //foldre
+  /nginx
+  ```
+1. set up config file (under /comples/k8s dir)
 
+    clusterIP, NodePort - accessible by other parts in the project
+    ![](/img/ip_port.png)
+    Ingress - accessible by users
 
+2. Test locally on minikube
+3. Create a Github/Travis flow to build images and deploy
+4. Deploy app to a cloud provider
+
+can combine different single config files into one file. (not recommanded in this course)
+
+#### The need for volumes with databases
+
+Postgres writes data to file system. If the pod crashed the data disapeared.
+
+**avoid different pods (2 replics pods of postgres database related with the same volume) getting access to same database volume**
+
+volume (in container termnology) : mechanism allows containers to access a filesystem outside its own filesystem.
+
+volume (in kubernetes): an object type, allow container to save data in pod level. Different from Docker voluem. if the pod crashed, the volume can disappeared.
+
+it's different from what we want **Persistent Volume Claim**, **Persistent Volume**
+
+Persistent Volume Claim: advertisement of the volume choices.
+Persistent Volume: create the volume on the fly.
+
+#### persistent volume claim
+
+```
+apiVersion: V1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  accessModes:
+  <!-- can be used by only one node -->
+    - ReadWriteOnce
+  resources:
+    requests:
+    <!-- 2Gi space -->
+      storage: 2Gi
+```
+
+for app on my computetr `kubectl get storageclass` hostpath: host machine hardrive, its default
+for app on a cloud provider: different options: Google cloud persistent disk, Azure File..., can be automatically created. also can be customized.
+
+#### reconfig the postgres deployment
 
 
