@@ -633,7 +633,7 @@ Persistent Volume: create the volume on the fly.
 #### persistent volume claim
 
 ```
-apiVersion: V1
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: database-persistent-volume-claim
@@ -652,4 +652,32 @@ for app on a cloud provider: different options: Google cloud persistent disk, Az
 
 #### reconfig the postgres deployment
 
+#### ser environement variables
 
+multi-worker: redis
+multi-servier: redis, postgres
+
+#### set postgres password
+
+need new type of object `Secrets`. Use a imperative command to create secrect objcet.
+```
+kubectl create secret generic[secret type, tls(related with http, or docker registry)] <secret name> --from-literal [add the secret info in this command] PGPASSWORD=password123
+```
+
+config postgres-deployment, worker-deployment
+
+#### load balancer
+
+load balancer only provides access to one set of pods
+
+but we need to expose both client and server pods
+
+#### Ingress service
+
+wire up ingress service
+
+will use ingress-nginx, will not use kubernetes-ingress
+
+set up of ingress-nginx changes depending on your environment (local, GC, AWS, Azure)
+
+config routing rules for nginx
